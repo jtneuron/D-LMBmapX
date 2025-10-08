@@ -1,0 +1,125 @@
+# architecture
+arch: vit_base
+enc_arch: MAEViTEncoder
+dec_arch: MAEViTDecoder
+#NetType: Vit_CNN
+# wandb
+#proj_name: MAE_10w_hog0825_sharedfile
+proj_name: parameter_count
+run_name: ${proj_name}_${arch}_${dataset}
+wandb_id:
+disable_wandb: 1
+# dataset
+dataset: TH_mixed
+# ---------------data_path 3090---------------
+#data_path: /media/root/18TB_HDD/lpq/SelfMedMAE/source/Task800_Axon_type_mixed_128
+#data_path: /media/root/18TB_HDD/lpq/SelfMedMAE/source/Task668_Axon_TH_P28_128
+#data_path: /media/root/ssd2/lpq/Task012_Axon_TH_mixed_contrast
+#data_path: /media/root/SSD/lpq/Task011_Axon_TH_mixed_raw
+data_path: /media/root/SSD/lpq/Task018_Axon_TH_mixed_hog_10w
+
+# ---------------data_path 4090---------------
+#data_path: /media/user/hdd1/lpq/SelfMedMAE/source/Task700_Soma_TH_mixed_128
+#data_path: /media/user/hdd1/lpq/SelfMedMAE/source/Task010_Axon_TH_mixed_128
+#data_path: /media/user/hdd1/lpq/SelfMedMAE/source/Task003_Axon_TH_mixed_hog
+#data_path: /media/user/40B2A1DBB2A1D5A6/lpq/Task010_Axon_TH_mixed_128
+#data_path: /mnt/40B2A1DBB2A1D5A6/lpq/Task013_Axon_TH_mixed_edge
+#data_path: /mnt/40B2A1DBB2A1D5A6/lpq/Task015_Axon_TH_mixed_edge_2w
+#data_path: /media/user/hdd1/lpq/SelfMedMAE/source/Task676_Axon_TH_P28
+#data_path: /media/user/a7ede1e7-8011-4a0c-903a-6a8652a8de87/data/Task016_Axon_TH_mixed_hog_2w
+json_list: 'dataset.json'
+num_samples: 1
+cache_rate:
+
+# ---------------output 3090---------------------
+output_dir: /media/root/18TB_HDD/lpq/SelfMedMAE/run/${run_name}
+image_dir: /media/root/18TB_HDD/lpq/SelfMedMAE/run/${run_name}/train_output_img/
+ckpt_dir: ${output_dir}/ckpts
+
+# ---------------output 4090-----------------------
+#output_dir: /media/user/hdd1/lpq/SelfMedMAE/run/${run_name}
+#image_dir: /media/user/hdd1/lpq/SelfMedMAE/run/${run_name}/train_output_img/
+#ckpt_dir: ${output_dir}/ckpts
+
+# data preprocessing
+
+space_x: 1.5
+space_y: 1.5
+space_z: 2.0
+a_min: -175.0
+a_max: 250.0
+b_min: 0.0
+b_max: 1.0
+roi_x: 128
+roi_y: 128
+roi_z: 128
+RandFlipd_prob: 0.2
+RandRotate90d_prob: 0.2
+RandScaleIntensityd_prob: 0.1
+RandShiftIntensityd_prob: 0.1
+spatial_dim: 3
+
+
+# trainer
+trainer_name: MAE3DHOGTrainer
+batch_size: 12
+vis_batch_size: 1
+start_epoch: 0
+warmup_epochs: 25
+epochs: 1200
+workers: 4
+hog_weight: 0.5
+#pretrain:
+#pretrain: /media/root/18TB_HDD/lpq/SelfMedMAE/pretrain/beit_base_patch16_224_pt22k.pth
+#pretrain: /media/root/18TB_HDD/lpq/SelfMedMAE/pretrain/deit_base_patch16_224-b5f2ef4d.pth
+#pretrain: /media/root/18TB_HDD/lpq/SelfMedMAE/pretrain/beitv2_base_patch16_224_pt1k.pth
+#pretrain: /media/user/hdd1/lpq/SelfMedMAE/pretrain/mae_visualize_vit_base.pth
+#pretrain: /media/user/hdd1/lpq/SelfMedMAE/run/MAE_10w_raw_vit_base_TH_mixed/ckpts/checkpoint_0170.pth.tar
+#pretrain: /media/root/18TB_HDD/lpq/SelfMedMAE/pretrain/10w_checkpoint_1000.pth.tar
+pretrain:
+pretrain_type: enc_dec
+resume:
+
+# model
+patchembed: 'PatchEmbed3D'
+pos_embed_type: 'sincos'
+mask_ratio: 0.25
+input_size: ${roi_x}
+patch_size: 16
+in_chans: 1
+encoder_embed_dim: 768
+encoder_depth: 12
+encoder_num_heads: 12
+decoder_embed_dim: 384
+decoder_depth: 8
+decoder_num_heads: 12
+
+# optimizer
+type: adamw
+lr: 3e-4
+beta1: 0.9
+beta2: 0.95
+weight_decay: 0.05
+
+smooth_nr: 0.0
+smooth_dr: 1e-6
+
+# logging
+vis_freq: 10
+save_freq: 10
+print_freq: 10
+# distributed processing
+gpu: 0
+#dist_url: 'tcp://202.117.21.79:10001'
+dist_url: 'file:///media/root/18TB_HDD/lpq/SelfMedMAE/share/sharedfile'
+world_size: 1
+multiprocessing_distributed: False
+dist_backend: nccl
+#distributed:
+distributed:
+rank: 0
+ngpus_per_node:
+# randomness
+seed:
+# debugging
+debug: false

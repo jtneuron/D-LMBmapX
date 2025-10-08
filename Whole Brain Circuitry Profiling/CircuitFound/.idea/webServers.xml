@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="baedaedf-053c-4bda-8953-9babdd0c2ba6" name="SelfMedMAE">
+        <fileTransfer rootFolder="/media/root/18TB_HDD/lpq" accessType="SFTP" host="10.181.7.224" port="7000" sshConfigId="6ef03396-9cd2-4c36-ba66-785743eff9ff" sshConfig="lipeiqi@10.181.7.224:7000">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

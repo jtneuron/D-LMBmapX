@@ -1,0 +1,27 @@
+// creat MAE and Fine-tune dataset
+python create_data.py --base /media/root/6701ae9d-6612-4271-8d50-522d7f72528b/lpq/MAE_raw_data/TH_mixed_128_10w --output_dir /media/root/SSD/lpq --task_name Axon_TH_mixed_hog_10w --task_id 018
+
+// train MAE
+python main.py configs/mae3d_axon_1gpu.yaml
+
+// train
+python main.py configs/vit_res_axon_1gpu.yaml --pretrain /media/user/hdd1/lpq/SelfMedMAE/pretrain/checkpoint_1000.pth.tar
+
+//eval
+
+python eval.py configs/unetr_axon_1gpu_eval.yaml --pretrain /media/root/18TB_HDD/lpq/SelfMedMAE/run/UNETR3D_axons_3_vit_base_TH_P28/ckpts/checkpoint_0999.pth.tar
+
+python eval.py
+--batch_size 2
+--gpu_ids 0,1
+--val_type segment
+--section P28-Brain4
+--output_folder seg_P28_Brain4_20_DA_best
+--overlap 20
+--output_nc 2
+--process 2
+--pre_trained /media/root/18TB_HDD/lpq/models/DA_best/model_final_checkpoint.pth
+
+
+// wandb
+56b5facc32085ff84b5f5b6d65f1c7ca4c3b9c2a
