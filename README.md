@@ -1,5 +1,7 @@
 # D-LMBmapX
 
+![D-LMBmapX](C:\Users\Peiqi\Desktop\lab\CELL-PaperMaterial\D-LMBmapX\D-LMBmapX.png)
+
 - [Paper](https://www.biorxiv.org/content/10.1101/2025.02.25.639766v1)
 - [Software]()
 
@@ -18,4 +20,4 @@ D-LMBmapX, a deep learning–based framework designed for automated whole-brain 
 
 ## 🎉 D-LMBmapX software
 
-D-LMBmapX provides an open-source software featuring a user-friendly GUI. The software allow researchers to easily build customized applications and extend functionalities for neuroscience studies. The graphical interface enables selection, configuration, and execution of various deep learning models for registration, segmentation, facilitating efficient analysis across developmental stages.
+D-LMBmapX provides an open-source software featuring a user-friendly GUI. The software allow researchers to easily build customized applications and extend functionalities for neuroscience studies. The graphical interface enables selection, configuration, and execution of various deep learning models for registration, segmentation, facilitating efficient analysis for whole brain circuitry profiling.
