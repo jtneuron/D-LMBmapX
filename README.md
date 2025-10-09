@@ -7,11 +7,12 @@
 
 D-LMBmapX, a deep learning–based framework designed for automated whole-brain circuitry profiling throughout postnatal development. It provides:
 
-1. Sample-inferred atlas construction method from anchor stages
+1. Sample-inferred atlas construction method from anchor stages.
 
-2. Foundation model for generalized axon and soma segmentation
-3. Cross-modality and cross-dimensional registration method
-4. Generalizable 5D biomedical spatial analysis strategies
+2. Foundation model for generalized axon and soma segmentation.
+3. Cross-modality and cross-dimensional registration method.
+4. An open-source and user-friendly software.
+5. Generalizable 5D biomedical spatial analysis strategies.
 
 ![Overview](./Overview.png)
 
