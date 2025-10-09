@@ -1,6 +1,6 @@
 # D-LMBmapX
 
-![D-LMBmapX](C:\Users\Peiqi\Desktop\lab\CELL-PaperMaterial\D-LMBmapX\D-LMBmapX.png)
+![D-LMBmapX](./D-LMBmapX.png)
 
 - [Paper](https://www.biorxiv.org/content/10.1101/2025.02.25.639766v1)
 - [Software]()
