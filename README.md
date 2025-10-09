@@ -7,4 +7,4 @@
 
 ## Overview
 
-D-LMBmapX，a deep learning–based framework designed for automated whole-brain circuitry profiling throughout postnatal development.
+D-LMBmapX, a deep learning–based framework designed for automated whole-brain circuitry profiling throughout postnatal development.
