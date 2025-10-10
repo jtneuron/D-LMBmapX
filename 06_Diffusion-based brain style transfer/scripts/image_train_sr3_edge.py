@@ -1,0 +1,115 @@
+"""
+Train a diffusion model on images.
+"""
+
+import argparse
+import sys
+
+sys.path.append(".")
+from guided_diffusion import dist_util, logger
+from guided_diffusion.image_datasets_seg_edge import load_data, load_val_data
+from guided_diffusion.resample import create_named_schedule_sampler
+from guided_diffusion.script_util import (
+    model_and_diffusion_defaults,
+    create_model_and_diffusion,
+    args_to_dict,
+    add_dict_to_argparser,
+)
+from guided_diffusion.train_util import TrainLoop
+import os
+
+
+def main():
+    args = create_argparser().parse_args()
+    os.environ['OPENAI_LOGDIR'] = args.logdir
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+    os.environ['OPENAI_LOG_FORMAT'] = 'stdout,log,csv,tensorboard'
+    dist_util.setup_dist()
+    logger.configure()
+    logger.log("creating model and diffusion...")
+    model, diffusion = create_model_and_diffusion(
+        **args_to_dict(args, model_and_diffusion_defaults().keys())
+    )
+    logger.log(list(vars(args).items()))
+    model.to(dist_util.dev())
+    schedule_sampler = create_named_schedule_sampler(args.schedule_sampler, diffusion)
+
+    logger.log("creating data loader...")
+    args.resolution = tuple(args.resolution)
+    data = load_data(
+        data_dir=args.data_dir,
+        batch_size=args.batch_size,
+        image_size=args.resolution,
+        class_cond=args.class_cond,
+        in_channels=1,  # args.in_channels,
+    )
+    val_data = None
+    if args.val_data_dir != "":
+        val_data = load_val_data(
+            data_dir=args.val_data_dir,
+            batch_size=args.val_batch_size,
+            image_size=args.resolution,
+            class_cond=args.class_cond,
+            in_channels=1,  # args.in_channels,
+            random_crop=False,
+            random_flip=False,
+            deterministic=True,
+            data_num=args.val_data_num,
+        )
+    logger.log("training...")
+    TrainLoop(
+        model=model,
+        diffusion=diffusion,
+        data=data,
+        batch_size=args.batch_size,
+        microbatch=args.microbatch,
+        lr=args.lr,
+        ema_rate=args.ema_rate,
+        log_interval=args.log_interval,
+        save_interval=args.save_interval,
+        resume_checkpoint=args.resume_checkpoint,
+        use_fp16=args.use_fp16,
+        fp16_scale_growth=args.fp16_scale_growth,
+        schedule_sampler=schedule_sampler,
+        weight_decay=args.weight_decay,
+        lr_anneal_steps=args.lr_anneal_steps,
+        max_save_num=args.max_save_num,
+        val_data=val_data,
+        val_interval=args.val_interval,
+        continous=args.continous,
+    ).run_loop()
+
+
+def create_argparser():
+    defaults = dict(
+        data_dir="",
+        schedule_sampler="uniform",
+        lr=1e-4,
+        weight_decay=0.0,
+        lr_anneal_steps=0,
+        batch_size=1,
+        microbatch=-1,  # -1 disables microbatches
+        ema_rate="0.9999",  # comma-separated list of EMA values
+        log_interval=10,
+        save_interval=10000,
+        resume_checkpoint="",
+        use_fp16=False,
+        fp16_scale_growth=1e-3,
+        logdir="./output/temp",
+        gpu='0',
+        max_save_num=3,
+        val_data_dir="",
+        val_batch_size=1,
+        val_data_num=16,
+        val_interval=10000,
+        continous=False,
+    )
+    defaults.update(model_and_diffusion_defaults())
+    parser = argparse.ArgumentParser()
+    add_dict_to_argparser(parser, defaults)
+    parser.add_argument(f"--resolution", nargs='+', type=int)
+    return parser
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,9 @@
+
+monai==1.1.0
+monai_weekly==1.2.dev2312
+nibabel==4.0.2
+pytorch_msssim==0.2.1
+SimpleITK==2.2.1
+mpi4py
+#warmup_scheduler==0.3.2
+
